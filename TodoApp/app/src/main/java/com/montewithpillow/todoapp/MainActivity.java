@@ -1,5 +1,6 @@
 package com.montewithpillow.todoapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> items;
     ArrayAdapter<String> itemsAdapter;
     ListView lvItems;
+
+    // REQUEST_CODE can be any value we like, used to determine the result type later
+    private final int REQUEST_CODE = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +62,36 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        //click gesture to edit activity
+        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                Intent i = new Intent(MainActivity.this, EditItemActivity.class);
+                i.putExtra("editText", items.get(pos) );
+                i.putExtra("pos", pos);
+                startActivityForResult(i, REQUEST_CODE);
+            }
+        });
+    }
+
+    //handles the result of the sub-activity
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // REQUEST_CODE is defined above
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            // Extract text & pos value from result extras
+            String text = data.getExtras().getString("editText");
+            int pos = data.getIntExtra("pos", 0);
+
+            //remove item in that position
+            items.remove(pos);
+            itemsAdapter.notifyDataSetChanged();
+            writeItems();
+
+            //insert updated text in the position
+            itemsAdapter.insert(text, pos);
+            writeItems();
+        }
     }
 
     //read todo items from file: persistence
