@@ -1,6 +1,8 @@
 package com.montewithpillow.todoapp;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,7 +21,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<String> items;
-    ArrayAdapter<String> itemsAdapter;
+    TodoCursorAdapter todoAdapter;
     ListView lvItems;
 
     // REQUEST_CODE can be any value we like, used to determine the result type later
@@ -30,41 +32,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //read items from file
-        readItems();
-
-        //initialize listView and adapter
-        lvItems = (ListView) findViewById(R.id.lvItems);
-        itemsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
-        lvItems.setAdapter(itemsAdapter);
-
         //setup listener for touch gestures
-        setupListViewListener();
-
-        //sample database transactions
-        // Create sample data
-        Todoitem newItem = new Todoitem("First item :)", 1);
-        Todoitem secondItem = new Todoitem("2nd item :)", 1);
+       // setupListViewListener();
 
         // Get singleton instance of database
         TodoItemDatabaseHelper databaseHelper = TodoItemDatabaseHelper.getInstance(this);
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
-        // Add sample post to the database
-        databaseHelper.addTodoitem(newItem);
-        databaseHelper.addTodoitem(secondItem);
+        // Query for items from the database and get a cursor back
+        Cursor todoCursor = databaseHelper.cursor();
 
-        // Get all posts from database
-        List<Todoitem> items = databaseHelper.list();
-        for(Todoitem item: items) {
-            System.out.println("ITEM: " + item.text);
-        }
+        // Find ListView to populate
+        lvItems = (ListView) findViewById(R.id.lvItems);
+        // Setup cursor adapter using cursor from last step
+        todoAdapter = new TodoCursorAdapter(this, todoCursor, 0);
+        // Attach cursor adapter to the ListView
+        lvItems.setAdapter(todoAdapter);
     }
 
     //add items to the list
     public void addItem(View view) {
         EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
         String itemText = etNewItem.getText().toString();
-        itemsAdapter.add(itemText);
+        //itemsAdapter.add(itemText);
         etNewItem.setText("");
         writeItems();
     }
@@ -76,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapter, View item, int pos, long id) {
                 items.remove(pos);
-                itemsAdapter.notifyDataSetChanged();
+          //      itemsAdapter.notifyDataSetChanged();
                 writeItems();
                 return true;
             }
@@ -104,11 +94,11 @@ public class MainActivity extends AppCompatActivity {
 
             //remove item in that position
             items.remove(pos);
-            itemsAdapter.notifyDataSetChanged();
+           // itemsAdapter.notifyDataSetChanged();
             writeItems();
 
             //insert updated text in the position
-            itemsAdapter.insert(text, pos);
+          //  itemsAdapter.insert(text, pos);
             writeItems();
         }
     }

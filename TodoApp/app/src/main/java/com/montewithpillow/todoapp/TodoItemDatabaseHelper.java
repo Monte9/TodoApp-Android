@@ -150,7 +150,7 @@ public class TodoItemDatabaseHelper extends SQLiteOpenHelper {
         System.out.println("Row deleted!. Aye!");
     }
 
-    // Read All
+    // Read all
     public List<Todoitem> list() {
         List<Todoitem> list = new ArrayList<>();
 
@@ -185,5 +185,31 @@ public class TodoItemDatabaseHelper extends SQLiteOpenHelper {
         System.out.println("Got all items from db");
         c.close();
         return list;
+    }
+
+    public Cursor cursor() {
+        SQLiteDatabase db = getReadableDatabase();
+
+        // Build an array to specify the columns of the table you want your query to return
+        String[] projection = {
+                "rowid _id",
+                KEY_ITEM_ID,
+                KEY_ITEM_TEXT,
+                KEY_ITEM_PRIORITY
+        };
+
+        String sortOrder = KEY_ITEM_PRIORITY + " DESC";
+
+        // Query the table and return a cursor
+        Cursor c = db.query(
+                TABLE_ITEMS,                            // The table to query
+                projection,                             // The columns to return
+                null,                                   // The columns for the WHERE clause
+                null,                                   // The values for the WHERE clause
+                null,                           // don't group the rows
+                null,                                   // don't filter by row groups
+                sortOrder                               // The sort order
+        );
+        return c;
     }
 }
