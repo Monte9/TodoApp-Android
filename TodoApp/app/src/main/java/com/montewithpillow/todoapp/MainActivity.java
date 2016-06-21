@@ -14,6 +14,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +40,24 @@ public class MainActivity extends AppCompatActivity {
 
         //setup listener for touch gestures
         setupListViewListener();
+
+        //sample database transactions
+        // Create sample data
+        Todoitem newItem = new Todoitem("First item :)", 1);
+        Todoitem secondItem = new Todoitem("2nd item :)", 1);
+
+        // Get singleton instance of database
+        TodoItemDatabaseHelper databaseHelper = TodoItemDatabaseHelper.getInstance(this);
+
+        // Add sample post to the database
+        databaseHelper.addTodoitem(newItem);
+        databaseHelper.addTodoitem(secondItem);
+
+        // Get all posts from database
+        List<Todoitem> items = databaseHelper.list();
+        for(Todoitem item: items) {
+            System.out.println("ITEM: " + item.text);
+        }
     }
 
     //add items to the list
