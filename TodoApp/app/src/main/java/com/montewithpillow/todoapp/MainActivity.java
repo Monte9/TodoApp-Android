@@ -1,15 +1,21 @@
 package com.montewithpillow.todoapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.apache.commons.io.FileUtils;
 
@@ -73,15 +79,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //add items to the list
-    public void addItem(View view) {
-        EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
-        String itemText = etNewItem.getText().toString();
-        databaseHelper.addTodoitem(itemText, 1);
-        etNewItem.setText("");
-        reloadListView();
-    }
-
     public void reloadListView() {
         todoAdapter.clear();
         Cursor res = databaseHelper.getItems();
@@ -94,13 +91,36 @@ public class MainActivity extends AppCompatActivity {
 
     //handles the result of the sub-activity
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        System.out.println("here?");
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             String text = data.getExtras().getString("text");
-            long id = data.getIntExtra("id", 0);
             int priority = data.getIntExtra("priority", 0);
-            String position = String.valueOf(id);
-            databaseHelper.updateData(position, text, priority);
+            Boolean add = data.getBooleanExtra("add", false);
+            if (!add) {
+                System.out.println("here in not add?");
+                long id = data.getIntExtra("id", 0);
+                String position = String.valueOf(id);
+                databaseHelper.updateData(position, text, priority);
+            } else {
+                System.out.println("here in add?");
+                databaseHelper.addTodoitem(text, priority);
+            }
             reloadListView();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent i = new Intent(MainActivity.this, EditItemActivity.class);
+        i.putExtra("add", true);
+        startActivityForResult(i, 20);
+        return super.onOptionsItemSelected(item);
     }
 }

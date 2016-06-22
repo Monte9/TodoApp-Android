@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Edit Item Below"
+        android:text="Todo Item Details"
         android:id="@+id/displayText"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
