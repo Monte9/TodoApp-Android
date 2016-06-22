@@ -4,7 +4,7 @@
 
 Submitted by: **Monte Thakkar**
 
-Time spent: **3** hours spent in total
+Time spent: **10** hours spent in total
 
 ## User Stories
 
@@ -16,8 +16,8 @@ The following **required** functionality is completed:
 
 The following **optional** features are implemented:
 
-* [ ] Persist the todo items [into SQLite](http://guides.codepath.com/android/Persisting-Data-to-the-Device#sqlite) instead of a text file
-* [ ] Improve style of the todo items in the list [using a custom adapter](http://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView)
+* [x] Persist the todo items [into SQLite](http://guides.codepath.com/android/Persisting-Data-to-the-Device#sqlite) instead of a text file
+* [x] Improve style of the todo items in the list [using a custom adapter](http://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView)
 * [ ] Add support for completion due dates for todo items (and display within listview item)
 * [ ] Use a [DialogFragment](http://guides.codepath.com/android/Using-DialogFragment) instead of new Activity for editing items
 * [ ] Add support for selecting the priority of each todo item (and display in listview item)
@@ -32,11 +32,12 @@ The following **additional** features are implemented:
 Here's a walkthrough of implemented user stories:
 
 ![App walkthrough](todo.gif)
+
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
-## Notes
+## Challenges:
+1. Knowing the difference between listView index and id in SQLite. They are not directly realted to each other and it took me a while to realised that in order to perform CRUD actions I needed to work on the id of the todoitem as opposed to the index of the item on the listView.
 
-Describe any challenges encountered while building the app.
 
 ## License
 
