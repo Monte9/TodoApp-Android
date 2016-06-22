@@ -8,18 +8,19 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.nfc.Tag;
 import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by montewithpillow on 6/21/16.
  */
 public class TodoItemDatabaseHelper extends SQLiteOpenHelper {
     private static TodoItemDatabaseHelper sInstance;
 
-    // Database Info
+    // Database CONST
     private static final String DATABASE_NAME = "todoDatabase";
     private static final int DATABASE_VERSION = 1;
+    private static final String TABLE_ITEMS = "items";
+    private static final String KEY_ITEM_ID = "id";
+    private static final String KEY_ITEM_TEXT = "text";
+    private static final String KEY_ITEM_PRIORITY = "priority";
 
     /**
      * Constructor should be private to prevent direct instantiation.
@@ -39,14 +40,6 @@ public class TodoItemDatabaseHelper extends SQLiteOpenHelper {
         }
         return sInstance;
     }
-
-    // Table Names
-    private static final String TABLE_ITEMS = "items";
-
-    // Item Table Columns
-    private static final String KEY_ITEM_ID = "id";
-    private static final String KEY_ITEM_TEXT = "text";
-    private static final String KEY_ITEM_PRIORITY = "priority";
 
     // Called when the database connection is being configured.
     // Configure database settings for things like foreign key support, write-ahead logging, etc.
@@ -85,131 +78,38 @@ public class TodoItemDatabaseHelper extends SQLiteOpenHelper {
     //CRUD ACTIONS
 
     // Insert a post into the database
-    public void addTodoitem(Todoitem todoitem) {
+    public void addTodoitem(String text, Integer priority) {
         // Create and/or open the database for writing
         SQLiteDatabase db = getWritableDatabase();
 
-        // It's a good idea to wrap our insert in a transaction. This helps with performance and ensures
-        // consistency of the database.
-        db.beginTransaction();
-        try {
-
-            ContentValues values = new ContentValues();
-            values.put(KEY_ITEM_TEXT, todoitem.text);
-            values.put(KEY_ITEM_PRIORITY, todoitem.priority);
-
-            // Notice how we haven't specified the primary key. SQLite auto increments the primary key column.
-            db.insertOrThrow(TABLE_ITEMS, null, values);
-            db.setTransactionSuccessful();
-        } catch (Exception e) {
-            System.out.println("Error while trying to add post to database");
-            //Log.d(Tag, "Error while trying to add post to database");
-        } finally {
-            db.endTransaction();
-        }
+        ContentValues values = new ContentValues();
+        values.put(KEY_ITEM_TEXT, text);
+        values.put(KEY_ITEM_PRIORITY, priority);
+        db.insert(TABLE_ITEMS, null, values);
     }
 
-    // Insert or update todoitem in the database
-    public void update(Todoitem todoitem) {
+    // Insert or update item in the database
+    public void updateData(String id, String text, Integer priority) {
+        // Create and/or open the database for writing
         SQLiteDatabase db = getWritableDatabase();
 
-        // It's a good idea to wrap our insert in a transaction. This helps with performance and ensures
-        // consistency of the database.
-        db.beginTransaction();
-        try {
-            ContentValues values = new ContentValues();
-            values.put(KEY_ITEM_TEXT, todoitem.text);
-            values.put(KEY_ITEM_PRIORITY, todoitem.priority);
-
-            String selection = KEY_ITEM_ID + " = ?";
-            String[] selectionArgs = {String.valueOf(todoitem.getId())};
-
-            int count = db.update(
-                    TABLE_ITEMS,
-                    values,
-                    selection,
-                    selectionArgs);
-            System.out.println("Update successful.. count is: " + count);
-            db.setTransactionSuccessful();
-        } catch (Exception e) {
-            System.out.println("Error while trying to add post to database");
-            //Log.d(Tag, "Error while trying to add post to database");
-        } finally {
-            db.endTransaction();
-        }
+        ContentValues values = new ContentValues();
+        values.put(KEY_ITEM_TEXT, text);
+        values.put(KEY_ITEM_PRIORITY, priority);
+        db.update(TABLE_ITEMS, values, "id = ?", new String[]{id});
     }
 
-    // Delete
-    public void delete(Todoitem todoitem) {
+    public void deleteItems(String id) {
+        // Create and/or open the database for writing
         SQLiteDatabase db = getWritableDatabase();
 
-        String selection = KEY_ITEM_ID + " = ?";
-        String[] selectionArgs = {String.valueOf(todoitem.getId())};
-
-        int rowsAffected = db.delete(TABLE_ITEMS, selection, selectionArgs);
-        System.out.println("Row deleted!. Aye!");
+        db.delete(TABLE_ITEMS, "id = ?", new String[]{id});
     }
 
-    // Read all
-    public List<Todoitem> list() {
-        List<Todoitem> list = new ArrayList<>();
+    public Cursor getItems() {
+        // Create and/or open the database for writing
+        SQLiteDatabase db = getWritableDatabase();
 
-        SQLiteDatabase db = getReadableDatabase();
-
-        // Build an array to specify the columns of the table you want your query to return
-        String[] projection = {
-                KEY_ITEM_ID,
-                KEY_ITEM_TEXT,
-                KEY_ITEM_PRIORITY
-        };
-
-        String sortOrder = KEY_ITEM_PRIORITY + " DESC";
-
-        // Query the table and return a cursor
-        Cursor c = db.query(
-                TABLE_ITEMS,                            // The table to query
-                projection,                             // The columns to return
-                null,                                   // The columns for the WHERE clause
-                null,                                   // The values for the WHERE clause
-                null,                                   // don't group the rows
-                null,                                   // don't filter by row groups
-                sortOrder                               // The sort order
-        );
-
-        while (c.moveToNext()) {
-            String text = c.getString(c.getColumnIndex(KEY_ITEM_TEXT));
-            int priority = c.getInt(c.getColumnIndex(KEY_ITEM_PRIORITY));
-            long id = c.getLong(c.getColumnIndex(KEY_ITEM_ID));
-            list.add(new Todoitem(id, text, priority));
-        }
-        System.out.println("Got all items from db");
-        c.close();
-        return list;
-    }
-
-    public Cursor cursor() {
-        SQLiteDatabase db = getReadableDatabase();
-
-        // Build an array to specify the columns of the table you want your query to return
-        String[] projection = {
-                "rowid _id",
-                KEY_ITEM_ID,
-                KEY_ITEM_TEXT,
-                KEY_ITEM_PRIORITY
-        };
-
-        String sortOrder = KEY_ITEM_PRIORITY + " DESC";
-
-        // Query the table and return a cursor
-        Cursor c = db.query(
-                TABLE_ITEMS,                            // The table to query
-                projection,                             // The columns to return
-                null,                                   // The columns for the WHERE clause
-                null,                                   // The values for the WHERE clause
-                null,                           // don't group the rows
-                null,                                   // don't filter by row groups
-                sortOrder                               // The sort order
-        );
-        return c;
+        return db.rawQuery("select * from " + TABLE_ITEMS, null);
     }
 }

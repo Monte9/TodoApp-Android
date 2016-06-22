@@ -20,9 +20,12 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<String> items = new ArrayList<>();
+    List<Todoitem> todoItemList;
     TodoCursorAdapter todoAdapter;
     ListView lvItems;
+    TodoItemDatabaseHelper databaseHelper;
+    SQLiteDatabase db;
+    Todoitem todoItem;
 
     // REQUEST_CODE can be any value we like, used to determine the result type later
     private final int REQUEST_CODE = 20;
@@ -33,60 +36,57 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Get singleton instance of database
-        TodoItemDatabaseHelper databaseHelper = TodoItemDatabaseHelper.getInstance(this);
-        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        databaseHelper = TodoItemDatabaseHelper.getInstance(this);
+        db = databaseHelper.getWritableDatabase();
 
-        // Query for items from the database and get a cursor back
-        Cursor todoCursor = databaseHelper.cursor();
-
+        todoItemList = new ArrayList<>();
         // Find ListView to populate
         lvItems = (ListView) findViewById(R.id.lvItems);
         // Setup cursor adapter using cursor from last step
-        todoAdapter = new TodoCursorAdapter(this, todoCursor, 0);
+        todoAdapter = new TodoCursorAdapter(this, R.layout.item_todo, todoItemList);
         // Attach cursor adapter to the ListView
         lvItems.setAdapter(todoAdapter);
+
+        populateArrayItems();
+
+    
     }
 
     //add items to the list
     public void addItem(View view) {
         EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
         String itemText = etNewItem.getText().toString();
-
-        // Get singleton instance of database
-        TodoItemDatabaseHelper databaseHelper = TodoItemDatabaseHelper.getInstance(this);
-        SQLiteDatabase db = databaseHelper.getWritableDatabase();
-        Todoitem newItem = new Todoitem(itemText, 1);
-
-        databaseHelper.addTodoitem(newItem);
-
-        // Query for items from the database and get a cursor back
-        Cursor newCursor = databaseHelper.cursor();
-        // Find ListView to populate
-        lvItems = (ListView) findViewById(R.id.lvItems);
-        // Setup cursor adapter using cursor from last step
-        todoAdapter = new TodoCursorAdapter(this, newCursor, 0);
-        // Attach cursor adapter to the ListView
-        lvItems.setAdapter(todoAdapter);
-
+        databaseHelper.addTodoitem(itemText, 1);
         etNewItem.setText("");
+        populateArrayItems();
     }
 
-
-
-    //handles the result of the sub-activity
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // REQUEST_CODE is defined above
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            // Extract text & pos value from result extras
-            String text = data.getExtras().getString("editText");
-            int pos = data.getIntExtra("pos", 0);
-
-            //remove item in that position
-            items.remove(pos);
-           // itemsAdapter.notifyDataSetChanged();
-
-            //insert updated text in the position
-          //  itemsAdapter.insert(text, pos);
+    public void populateArrayItems() {
+        todoAdapter.clear();
+        Cursor res = databaseHelper.getItems();
+        while (res.moveToNext()) {
+            todoItem = new Todoitem(res.getLong(0), res.getString(1), res.getInt(2));
+            todoAdapter.add(todoItem);
         }
+        todoAdapter.notifyDataSetChanged();
     }
+//
+//
+//
+//    //handles the result of the sub-activity
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        // REQUEST_CODE is defined above
+//        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+//            // Extract text & pos value from result extras
+//            String text = data.getExtras().getString("editText");
+//            int pos = data.getIntExtra("pos", 0);
+//
+//            //remove item in that position
+//            items.remove(pos);
+//           // itemsAdapter.notifyDataSetChanged();
+//
+//            //insert updated text in the position
+//          //  itemsAdapter.insert(text, pos);
+//        }
+//    }
 }
