@@ -6,25 +6,25 @@ import java.io.Serializable;
  * Created by montewithpillow on 6/21/16.
  */
 public class Todoitem implements Serializable {
-    private Long id;
+    private int id;
     public String text;
     public int priority;
 
     public Todoitem(String text, int priority) {
-        this(null, text, priority);
+        this(0, text, priority);
     }
 
-    public Todoitem(Long id, String text, int priority) {
+    public Todoitem(int id, String text, int priority) {
         setId(id);
         setText(text);
         setPriority(priority);
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 

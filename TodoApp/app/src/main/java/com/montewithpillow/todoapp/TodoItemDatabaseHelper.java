@@ -102,7 +102,7 @@ public class TodoItemDatabaseHelper extends SQLiteOpenHelper {
     public void deleteItems(String id) {
         // Create and/or open the database for writing
         SQLiteDatabase db = getWritableDatabase();
-
+        System.out.println("Delete this: " + id);
         db.delete(TABLE_ITEMS, "id = ?", new String[]{id});
     }
 

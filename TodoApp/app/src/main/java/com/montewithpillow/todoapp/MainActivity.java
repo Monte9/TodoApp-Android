@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("text", todoItem.getText());
                 i.putExtra("priority", todoItem.getPriority());
                 startActivityForResult(i, 20);
+
+                //databaseHelper.deleteItems(String.valueOf(todoItem.getId()));
+                //reloadListView();
             }
         });
     }
@@ -75,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         todoAdapter.clear();
         Cursor res = databaseHelper.getItems();
         while (res.moveToNext()) {
-            todoItem = new Todoitem(res.getLong(0), res.getString(1), res.getInt(2));
+            todoItem = new Todoitem(res.getInt(0), res.getString(1), res.getInt(2));
             todoAdapter.add(todoItem);
         }
         todoAdapter.notifyDataSetChanged();
@@ -83,13 +86,11 @@ public class MainActivity extends AppCompatActivity {
 
     //handles the result of the sub-activity
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // REQUEST_CODE is defined above
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            // Extract text & pos value from result extras
             String text = data.getExtras().getString("text");
-            int pos = data.getIntExtra("id", 0);
+            long id = data.getIntExtra("id", 0);
             int priority = data.getIntExtra("priority", 0);
-            String position = String.valueOf(pos);
+            String position = String.valueOf(id);
             databaseHelper.updateData(position, text, priority);
             reloadListView();
         }
