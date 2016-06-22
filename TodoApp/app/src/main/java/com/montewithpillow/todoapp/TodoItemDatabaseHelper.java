@@ -57,7 +57,7 @@ public class TodoItemDatabaseHelper extends SQLiteOpenHelper {
                 "(" +
                 KEY_ITEM_ID + " INTEGER PRIMARY KEY," + // Define a primary key
                 KEY_ITEM_TEXT + " TEXT," + //Text of the todo item
-                KEY_ITEM_PRIORITY + " INTEGER" + //Priority of the todo item
+                KEY_ITEM_PRIORITY + " TEXT" + //Priority of the todo item
                 ")";
 
         db.execSQL(CREATE_ITEMS_TABLE);
@@ -78,7 +78,7 @@ public class TodoItemDatabaseHelper extends SQLiteOpenHelper {
     //CRUD ACTIONS
 
     // Insert a post into the database
-    public void addTodoitem(String text, Integer priority) {
+    public void addTodoitem(String text, String priority) {
         // Create and/or open the database for writing
         SQLiteDatabase db = getWritableDatabase();
 
@@ -89,7 +89,7 @@ public class TodoItemDatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Insert or update item in the database
-    public void updateData(String id, String text, Integer priority) {
+    public void updateData(String id, String text, String priority) {
         // Create and/or open the database for writing
         SQLiteDatabase db = getWritableDatabase();
 
@@ -102,7 +102,6 @@ public class TodoItemDatabaseHelper extends SQLiteOpenHelper {
     public void deleteItems(String id) {
         // Create and/or open the database for writing
         SQLiteDatabase db = getWritableDatabase();
-        System.out.println("Delete this: " + id);
         db.delete(TABLE_ITEMS, "id = ?", new String[]{id});
     }
 

@@ -10,7 +10,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.Toast;
+
 
 public class EditItemActivity extends AppCompatActivity {
 
@@ -27,24 +29,56 @@ public class EditItemActivity extends AppCompatActivity {
         if (!add) {
             String editText = getIntent().getStringExtra("text");
             int id = getIntent().getIntExtra("id", 0);
-            int priority = getIntent().getIntExtra("priority", 0);
+            String priority = getIntent().getStringExtra("priority");
+            int priorityValue = priorityToInt(priority);
             todoitem = new Todoitem(id, editText, priority);
+            SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar);
+            seekBar.setProgress(priorityValue);
             EditText editText1 = (EditText) findViewById(R.id.editText);
             editText1.setText(editText);
         }
     }
 
+    private int priorityToInt(String priority) {
+        switch (priority) {
+            case "low":
+                return 0;
+            case "Normal":
+                return 1;
+            case "HIGH":
+                return 2;
+            default:
+                return 0;
+        }
+    }
+
+    private String priorityToString(int priority) {
+        switch (priority) {
+            case 0:
+                return "low";
+            case 1:
+                return "Normal";
+            case 2:
+                return "HIGH";
+            default:
+                return "low";
+        }
+    }
+
     public void onSave(View v) {
         EditText editText = (EditText) findViewById(R.id.editText);
-        String itemText = editText.getText().toString();
-        // Prepare data intent
-        Intent data = new Intent();
+        SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar);
 
+        String itemText = editText.getText().toString();
+        int priorityValue = seekBar.getProgress();
+        String priorityString = priorityToString(priorityValue);
+
+        Intent data = new Intent();
         if (add) {
-            todoitem = new Todoitem(itemText, 1);
+            todoitem = new Todoitem(itemText, "HIGH");
             data.putExtra("add", true);
             data.putExtra("text", itemText);
-            data.putExtra("priority", 1);
+            data.putExtra("priority", priorityString);
         } else {
             todoitem.setText(itemText);
             data.putExtra("add", false);
@@ -96,5 +130,12 @@ public class EditItemActivity extends AppCompatActivity {
         );
         alertDialog.show();
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onCancel(View view) {
+        Intent data = new Intent();
+        // Activity finished ok, return the data
+        setResult(RESULT_CANCELED, data); // set result code and bundle data for response
+        finish(); // closes the activity, pass data to parent
     }
 }

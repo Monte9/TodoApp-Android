@@ -39,7 +39,7 @@ public class TodoCursorAdapter extends ArrayAdapter<Todoitem> {
             TextView tvBody = (TextView) view.findViewById(R.id.tvBody);
             TextView tvPriority = (TextView) view.findViewById(R.id.tvPriority);
             tvBody.setText(newItem.getText());
-            tvPriority.setText(String.valueOf(newItem.getPriority()));
+            tvPriority.setText(newItem.getPriority());
         }
         return view;
     }

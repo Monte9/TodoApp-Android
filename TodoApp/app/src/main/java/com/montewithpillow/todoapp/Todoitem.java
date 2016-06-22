@@ -8,13 +8,13 @@ import java.io.Serializable;
 public class Todoitem implements Serializable {
     private int id;
     public String text;
-    public int priority;
+    public String priority;
 
-    public Todoitem(String text, int priority) {
+    public Todoitem(String text, String priority) {
         this(0, text, priority);
     }
 
-    public Todoitem(int id, String text, int priority) {
+    public Todoitem(int id, String text, String priority) {
         setId(id);
         setText(text);
         setPriority(priority);
@@ -32,15 +32,15 @@ public class Todoitem implements Serializable {
         return text;
     }
 
-    public int getPriority() {
-        return priority;
-    }
-
     public void setText(String text) {
         this.text = text;
     }
 
-    public void setPriority(int priority) {
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
         this.priority = priority;
     }
 }
