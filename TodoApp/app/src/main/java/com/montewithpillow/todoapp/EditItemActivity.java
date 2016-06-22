@@ -14,7 +14,7 @@ public class EditItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_item);
 
         //set the text as the current todo item
-        String editText = getIntent().getStringExtra("editText");
+        String editText = getIntent().getStringExtra("text");
         EditText editText1 = (EditText) findViewById(R.id.editText);
         editText1.setText(editText);
         int code = getIntent().getIntExtra("code", 0);
@@ -28,9 +28,11 @@ public class EditItemActivity extends AppCompatActivity {
         Intent data = new Intent();
 
         // Pass relevant data back as a result
-        data.putExtra("editText", itemText);
-        int pos = getIntent().getIntExtra("pos", 0);
-        data.putExtra("pos", pos);
+        data.putExtra("text", itemText);
+        int pos = getIntent().getIntExtra("id", 0);
+        int priority = getIntent().getIntExtra("priority", 0);
+        data.putExtra("id", pos);
+        data.putExtra("priority", priority);
 
         // Activity finished ok, return the data
         setResult(RESULT_OK, data); // set result code and bundle data for response

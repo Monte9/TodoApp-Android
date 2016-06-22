@@ -47,9 +47,19 @@ public class MainActivity extends AppCompatActivity {
         // Attach cursor adapter to the ListView
         lvItems.setAdapter(todoAdapter);
 
-        populateArrayItems();
+        reloadListView();
 
-    
+        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                Intent i = new Intent(MainActivity.this, EditItemActivity.class);
+                todoItem = todoAdapter.getItem(pos);
+                i.putExtra("id", todoItem.getId());
+                i.putExtra("text", todoItem.getText());
+                i.putExtra("priority", todoItem.getPriority());
+                startActivityForResult(i, 20);
+            }
+        });
     }
 
     //add items to the list
@@ -58,10 +68,10 @@ public class MainActivity extends AppCompatActivity {
         String itemText = etNewItem.getText().toString();
         databaseHelper.addTodoitem(itemText, 1);
         etNewItem.setText("");
-        populateArrayItems();
+        reloadListView();
     }
 
-    public void populateArrayItems() {
+    public void reloadListView() {
         todoAdapter.clear();
         Cursor res = databaseHelper.getItems();
         while (res.moveToNext()) {
@@ -70,23 +80,18 @@ public class MainActivity extends AppCompatActivity {
         }
         todoAdapter.notifyDataSetChanged();
     }
-//
-//
-//
-//    //handles the result of the sub-activity
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        // REQUEST_CODE is defined above
-//        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-//            // Extract text & pos value from result extras
-//            String text = data.getExtras().getString("editText");
-//            int pos = data.getIntExtra("pos", 0);
-//
-//            //remove item in that position
-//            items.remove(pos);
-//           // itemsAdapter.notifyDataSetChanged();
-//
-//            //insert updated text in the position
-//          //  itemsAdapter.insert(text, pos);
-//        }
-//    }
+
+    //handles the result of the sub-activity
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // REQUEST_CODE is defined above
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            // Extract text & pos value from result extras
+            String text = data.getExtras().getString("text");
+            int pos = data.getIntExtra("id", 0);
+            int priority = data.getIntExtra("priority", 0);
+            String position = String.valueOf(pos);
+            databaseHelper.updateData(position, text, priority);
+            reloadListView();
+        }
+    }
 }
