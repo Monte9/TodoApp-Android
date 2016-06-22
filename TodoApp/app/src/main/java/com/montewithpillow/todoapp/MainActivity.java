@@ -20,7 +20,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<String> items;
+    ArrayList<String> items = new ArrayList<>();
     TodoCursorAdapter todoAdapter;
     ListView lvItems;
 
@@ -31,9 +31,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //setup listener for touch gestures
-       // setupListViewListener();
 
         // Get singleton instance of database
         TodoItemDatabaseHelper databaseHelper = TodoItemDatabaseHelper.getInstance(this);
@@ -54,35 +51,27 @@ public class MainActivity extends AppCompatActivity {
     public void addItem(View view) {
         EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
         String itemText = etNewItem.getText().toString();
-        //itemsAdapter.add(itemText);
+
+        // Get singleton instance of database
+        TodoItemDatabaseHelper databaseHelper = TodoItemDatabaseHelper.getInstance(this);
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+        Todoitem newItem = new Todoitem(itemText, 1);
+
+        databaseHelper.addTodoitem(newItem);
+
+        // Query for items from the database and get a cursor back
+        Cursor newCursor = databaseHelper.cursor();
+        // Find ListView to populate
+        lvItems = (ListView) findViewById(R.id.lvItems);
+        // Setup cursor adapter using cursor from last step
+        todoAdapter = new TodoCursorAdapter(this, newCursor, 0);
+        // Attach cursor adapter to the ListView
+        lvItems.setAdapter(todoAdapter);
+
         etNewItem.setText("");
-        writeItems();
     }
 
-    //listener for touch gestures
-    private void setupListViewListener() {
-        //long click gesture for deleting items
-        lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapter, View item, int pos, long id) {
-                items.remove(pos);
-          //      itemsAdapter.notifyDataSetChanged();
-                writeItems();
-                return true;
-            }
-        });
 
-        //click gesture to edit activity
-        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
-                Intent i = new Intent(MainActivity.this, EditItemActivity.class);
-                i.putExtra("editText", items.get(pos) );
-                i.putExtra("pos", pos);
-                startActivityForResult(i, REQUEST_CODE);
-            }
-        });
-    }
 
     //handles the result of the sub-activity
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -95,33 +84,9 @@ public class MainActivity extends AppCompatActivity {
             //remove item in that position
             items.remove(pos);
            // itemsAdapter.notifyDataSetChanged();
-            writeItems();
 
             //insert updated text in the position
           //  itemsAdapter.insert(text, pos);
-            writeItems();
-        }
-    }
-
-    //read todo items from file: persistence
-    private void readItems() {
-        File filesDir = getFilesDir();
-        File todoFile = new File(filesDir, "todo.txt");
-        try {
-            items = new ArrayList<String>(FileUtils.readLines(todoFile));
-        } catch (IOException e) {
-            items = new ArrayList<String>();
-        }
-    }
-
-    //write todo items to file: persistence
-    private void writeItems() {
-        File filesDir = getFilesDir();
-        File todoFile = new File(filesDir, "todo.txt");
-        try {
-            FileUtils.writeLines(todoFile, items);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }
