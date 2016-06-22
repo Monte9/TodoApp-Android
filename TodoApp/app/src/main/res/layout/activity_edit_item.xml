@@ -25,12 +25,12 @@
         android:ems="10"
         android:textAlignment="center"
         android:id="@+id/editText"
-        android:layout_marginTop="29dp"
         android:layout_below="@+id/displayText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_marginTop="43dp"
+        android:layout_alignRight="@+id/hpTextView"
+        android:layout_alignEnd="@+id/hpTextView" />
 
     <Button
         android:layout_width="wrap_content"
@@ -38,7 +38,68 @@
         android:text="Save"
         android:onClick="onSave"
         android:id="@+id/saveButton"
-        android:layout_marginTop="34dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:id="@+id/cancelButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <SeekBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar"
+        android:minWidth="300pt"
+        android:progress="1"
+        android:max="2"
+        android:layout_above="@+id/saveButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="48dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="low"
+        android:id="@+id/lpTextView"
+        android:layout_above="@+id/seekBar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Normal Priority"
+        android:id="@+id/npTextView"
+        android:layout_above="@+id/seekBar"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="HIGH"
+        android:id="@+id/hpTextView"
+        android:layout_alignBottom="@+id/npTextView"
+        android:layout_alignRight="@+id/seekBar"
+        android:layout_alignEnd="@+id/seekBar" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Due Date"
+        android:id="@+id/ddTextView"
+        android:layout_marginTop="56dp"
         android:layout_below="@+id/editText"
         android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

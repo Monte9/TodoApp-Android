@@ -49,6 +49,14 @@ public class MainActivity extends AppCompatActivity {
 
         reloadListView();
 
+        //check for deleting item
+        Boolean delete = getIntent().getBooleanExtra("delete", false);
+        if (delete) {
+            int id = getIntent().getIntExtra("id", 0);
+            databaseHelper.deleteItems(String.valueOf(id));
+            reloadListView();
+        }
+
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
