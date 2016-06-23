@@ -17,10 +17,13 @@ public class TodoItemDatabaseHelper extends SQLiteOpenHelper {
     // Database CONST
     private static final String DATABASE_NAME = "todoDatabase";
     private static final int DATABASE_VERSION = 1;
-    private static final String TABLE_ITEMS = "items";
+    private static final String TABLE_ITEMS = "todos";
     private static final String KEY_ITEM_ID = "id";
     private static final String KEY_ITEM_TEXT = "text";
+    private static final String KEY_ITEM_DUE_DATE = "due_date";
     private static final String KEY_ITEM_PRIORITY = "priority";
+
+    SQLiteDatabase db;
 
     /**
      * Constructor should be private to prevent direct instantiation.
@@ -28,6 +31,7 @@ public class TodoItemDatabaseHelper extends SQLiteOpenHelper {
      */
     private TodoItemDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        db = getWritableDatabase();
     }
 
     //Singleton pattern for Databasehelper
@@ -53,11 +57,13 @@ public class TodoItemDatabaseHelper extends SQLiteOpenHelper {
     // If a database already exists on disk with the same DATABASE_NAME, this method will NOT be called.
     @Override
     public void onCreate(SQLiteDatabase db) {
+        System.out.println("CREATE TABLE HERE>...");
         String CREATE_ITEMS_TABLE = "CREATE TABLE " + TABLE_ITEMS +
                 "(" +
                 KEY_ITEM_ID + " INTEGER PRIMARY KEY," + // Define a primary key
                 KEY_ITEM_TEXT + " TEXT," + //Text of the todo item
-                KEY_ITEM_PRIORITY + " TEXT" + //Priority of the todo item
+                KEY_ITEM_PRIORITY + " TEXT," + //Priority of the todo item
+                KEY_ITEM_DUE_DATE + " TEXT" +
                 ")";
 
         db.execSQL(CREATE_ITEMS_TABLE);
@@ -78,24 +84,26 @@ public class TodoItemDatabaseHelper extends SQLiteOpenHelper {
     //CRUD ACTIONS
 
     // Insert a post into the database
-    public void addTodoitem(String text, String priority) {
+    public void addTodoitem(String text, String priority, String dueDate) {
         // Create and/or open the database for writing
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(KEY_ITEM_TEXT, text);
         values.put(KEY_ITEM_PRIORITY, priority);
+        values.put(KEY_ITEM_DUE_DATE, dueDate);
         db.insert(TABLE_ITEMS, null, values);
     }
 
     // Insert or update item in the database
-    public void updateData(String id, String text, String priority) {
+    public void updateData(String id, String text, String priority, String dueDate) {
         // Create and/or open the database for writing
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(KEY_ITEM_TEXT, text);
         values.put(KEY_ITEM_PRIORITY, priority);
+        values.put(KEY_ITEM_DUE_DATE, dueDate);
         db.update(TABLE_ITEMS, values, "id = ?", new String[]{id});
     }
 
@@ -108,7 +116,6 @@ public class TodoItemDatabaseHelper extends SQLiteOpenHelper {
     public Cursor getItems() {
         // Create and/or open the database for writing
         SQLiteDatabase db = getWritableDatabase();
-
         return db.rawQuery("select * from " + TABLE_ITEMS, null);
     }
 }

@@ -1,7 +1,12 @@
 package com.montewithpillow.todoapp;
 
+import android.annotation.TargetApi;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.icu.util.Calendar;
+import android.os.Build;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,15 +14,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class EditItemActivity extends AppCompatActivity {
+public class EditItemActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     Todoitem todoitem;
     static Boolean add = false;
+    static String date = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +38,19 @@ public class EditItemActivity extends AppCompatActivity {
             String editText = getIntent().getStringExtra("text");
             int id = getIntent().getIntExtra("id", 0);
             String priority = getIntent().getStringExtra("priority");
+            String dueDate = getIntent().getStringExtra("dueDate");
+
             int priorityValue = priorityToInt(priority);
-            todoitem = new Todoitem(id, editText, priority);
+            todoitem = new Todoitem(id, editText, priority, dueDate);
+
             SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar);
             seekBar.setProgress(priorityValue);
+
             EditText editText1 = (EditText) findViewById(R.id.editText);
             editText1.setText(editText);
+
+            TextView dueDateText = (TextView) findViewById(R.id.ddTextView);
+            dueDateText.setText(dueDate);
         }
     }
 
@@ -78,15 +93,17 @@ public class EditItemActivity extends AppCompatActivity {
 
         Intent data = new Intent();
         if (add) {
-            todoitem = new Todoitem(itemText, "HIGH");
+            todoitem = new Todoitem(itemText, "HIGH", "Due @");
             data.putExtra("add", true);
             data.putExtra("text", itemText);
+            data.putExtra("dueDate", date);
             data.putExtra("priority", priorityString);
         } else {
             todoitem.setText(itemText);
             data.putExtra("add", false);
             data.putExtra("id", todoitem.getId());
             data.putExtra("text", itemText);
+            data.putExtra("dueDate", date);
             data.putExtra("priority", priorityString);
         }
 
@@ -140,5 +157,20 @@ public class EditItemActivity extends AppCompatActivity {
         // Activity finished ok, return the data
         setResult(RESULT_CANCELED, data); // set result code and bundle data for response
         finish(); // closes the activity, pass data to parent
+    }
+
+    // attach to an onclick handler to show the date picker
+    public void showDatePickerDialog(View v) {
+        DatePickerFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
+    }
+
+    // handle the date selected
+    @TargetApi(Build.VERSION_CODES.N)
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        TextView dateTextView = (TextView) findViewById(R.id.ddTextView);
+        dateTextView.setText(monthOfYear + "/" + dayOfMonth + "/" + year);
+        date = monthOfYear + "/" + dayOfMonth + "/" + year;
     }
 }

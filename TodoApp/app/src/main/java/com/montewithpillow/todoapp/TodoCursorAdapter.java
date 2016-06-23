@@ -38,8 +38,11 @@ public class TodoCursorAdapter extends ArrayAdapter<Todoitem> {
             // Find fields to populate in inflated template
             TextView tvBody = (TextView) view.findViewById(R.id.tvBody);
             TextView tvPriority = (TextView) view.findViewById(R.id.tvPriority);
+            TextView tvDueDate = (TextView) view.findViewById(R.id.dueDateTextView);
+
             tvBody.setText(newItem.getText());
             tvPriority.setText(newItem.getPriority());
+            tvDueDate.setText(newItem.getDueDate());
         }
         return view;
     }

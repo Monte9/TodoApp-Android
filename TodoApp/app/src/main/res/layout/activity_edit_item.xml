@@ -38,7 +38,7 @@
         android:text="Save"
         android:onClick="onSave"
         android:id="@+id/saveButton"
-        android:layout_alignParentBottom="true"
+        android:layout_alignTop="@+id/cancelButton"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
@@ -48,9 +48,10 @@
         android:text="Cancel"
         android:onClick="onCancel"
         android:id="@+id/cancelButton"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/seekBar"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="36dp" />
 
     <SeekBar
         android:layout_width="wrap_content"
@@ -59,10 +60,9 @@
         android:minWidth="300pt"
         android:progress="1"
         android:max="2"
-        android:layout_above="@+id/saveButton"
+        android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="48dp" />
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -97,9 +97,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Due Date"
+        android:text="Set Due Date"
+        android:onClick="showDatePickerDialog"
         android:id="@+id/ddTextView"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="41dp"
         android:layout_below="@+id/editText"
         android:layout_centerHorizontal="true" />
 

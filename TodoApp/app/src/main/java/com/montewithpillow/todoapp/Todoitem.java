@@ -9,15 +9,17 @@ public class Todoitem implements Serializable {
     private int id;
     public String text;
     public String priority;
+    public String dueDate;
 
-    public Todoitem(String text, String priority) {
-        this(0, text, priority);
+    public Todoitem(String text, String priority, String dueDate) {
+        this(0, text, priority, dueDate);
     }
 
-    public Todoitem(int id, String text, String priority) {
+    public Todoitem(int id, String text, String priority, String dueDate) {
         setId(id);
         setText(text);
         setPriority(priority);
+        setDueDate(dueDate);
     }
 
     public void setId(int id) {
@@ -36,11 +38,14 @@ public class Todoitem implements Serializable {
         this.text = text;
     }
 
-    public String getPriority() {
-        return priority;
-    }
+    public String getPriority() { return priority; }
 
     public void setPriority(String priority) {
         this.priority = priority;
     }
+
+    public String getDueDate() { return dueDate; }
+
+    public void setDueDate(String dueDate) { this.dueDate = dueDate; }
+
 }

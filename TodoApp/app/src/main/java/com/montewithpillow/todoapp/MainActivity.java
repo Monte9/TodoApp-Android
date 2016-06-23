@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("id", todoItem.getId());
                 i.putExtra("text", todoItem.getText());
                 i.putExtra("priority", todoItem.getPriority());
+                i.putExtra("dueDate", todoItem.getDueDate());
                 startActivityForResult(i, 20);
             }
         });
@@ -79,8 +80,11 @@ public class MainActivity extends AppCompatActivity {
     public void reloadListView() {
         todoAdapter.clear();
         Cursor res = databaseHelper.getItems();
+        // code to update your db
+        res.requery();
+
         while (res.moveToNext()) {
-            todoItem = new Todoitem(res.getInt(0), res.getString(1), res.getString(2));
+            todoItem = new Todoitem(res.getInt(0), res.getString(1), res.getString(2), res.getString(3));
             todoAdapter.add(todoItem);
         }
         todoAdapter.notifyDataSetChanged();
@@ -91,13 +95,14 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             String text = data.getExtras().getString("text");
             String priority = data.getStringExtra("priority");
+            String dueDate = data.getStringExtra("dueDate");
             Boolean add = data.getBooleanExtra("add", false);
             if (!add) {
                 int id = data.getIntExtra("id", 0);
                 String position = String.valueOf(id);
-                databaseHelper.updateData(position, text, priority);
+                databaseHelper.updateData(position, text, priority, dueDate);
             } else {
-                databaseHelper.addTodoitem(text, priority);
+                databaseHelper.addTodoitem(text, priority, dueDate);
             }
             reloadListView();
         }
