@@ -17,7 +17,7 @@ import android.widget.Toast;
 public class EditItemActivity extends AppCompatActivity {
 
     Todoitem todoitem;
-    Boolean add;
+    static Boolean add = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +71,10 @@ public class EditItemActivity extends AppCompatActivity {
 
         String itemText = editText.getText().toString();
         int priorityValue = seekBar.getProgress();
+
         String priorityString = priorityToString(priorityValue);
+
+        System.out.println("is it add?" + add);
 
         Intent data = new Intent();
         if (add) {
@@ -84,7 +87,7 @@ public class EditItemActivity extends AppCompatActivity {
             data.putExtra("add", false);
             data.putExtra("id", todoitem.getId());
             data.putExtra("text", itemText);
-            data.putExtra("priority", todoitem.getPriority());
+            data.putExtra("priority", priorityString);
         }
 
         // Activity finished ok, return the data
