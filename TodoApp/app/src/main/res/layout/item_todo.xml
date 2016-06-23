@@ -10,9 +10,11 @@
         android:layout_height="wrap_content"
         android:text="Todo items"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_alignBottom="@+id/tvPriority"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignBottom="@+id/dueDateTextView"
+        android:layout_toLeftOf="@+id/dueDateTextView"
+        android:layout_toStartOf="@+id/dueDateTextView" />
     <TextView
         android:id="@+id/tvPriority"
         android:layout_width="wrap_content"
