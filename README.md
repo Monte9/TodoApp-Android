@@ -4,7 +4,7 @@
 
 Submitted by: **Monte Thakkar**
 
-Time spent: **10** hours spent in total
+Time spent: **20** hours spent in total
 
 ## User Stories
 
@@ -18,14 +18,15 @@ The following **optional** features are implemented:
 
 * [x] Persist the todo items [into SQLite](http://guides.codepath.com/android/Persisting-Data-to-the-Device#sqlite) instead of a text file
 * [x] Improve style of the todo items in the list [using a custom adapter](http://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView)
-* [ ] Add support for completion due dates for todo items (and display within listview item)
-* [ ] Use a [DialogFragment](http://guides.codepath.com/android/Using-DialogFragment) instead of new Activity for editing items
-* [ ] Add support for selecting the priority of each todo item (and display in listview item)
+* [x] Add support for completion due dates for todo items (and display within listview item)
+* [x] Use a [DialogFragment](http://guides.codepath.com/android/Using-DialogFragment) instead of new Activity for editing items
+* [x] Add support for selecting the priority of each todo item (and display in listview item)
 * [ ] Tweak the style improving the UI / UX, play with colors, images or backgrounds
 
 The following **additional** features are implemented:
 
-* [ ] List anything else that you can get done to improve the app functionality!
+* [x] Using DialogFragment to implement due date (calendar) functionality
+* [x] Using seekbar to get priority (3 modes; low, Normal, HIGH)
 
 ## Video Walkthrough 
 
@@ -36,7 +37,8 @@ Here's a walkthrough of implemented user stories:
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Challenges:
-1. Knowing the difference between listView index and id in SQLite. They are not directly realted to each other and it took me a while to realised that in order to perform CRUD actions I needed to work on the id of the todoitem as opposed to the index of the item on the listView.
+1. Knowing the difference between listView index and row id in SQLite. They are not directly mapped to each other and it took me a while to realised that in order to perform CRUD actions I needed to work on the row id of the todoitem as opposed to the index of the item on the listView.
+2. After adding a new column, I had trouble getting my Cursor to work properly. Hence I had to bump up the version number of the db table as well as uninstall the app from the phone. 
 
 
 ## License
