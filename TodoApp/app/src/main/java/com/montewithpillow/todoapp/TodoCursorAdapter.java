@@ -3,6 +3,7 @@ package com.montewithpillow.todoapp;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,12 @@ public class TodoCursorAdapter extends ArrayAdapter<Todoitem> {
             tvPriority.setText(newItem.getPriority());
             tvDueDate.setText(newItem.getDueDate());
         }
+
+
+        if (newItem.getPriority().equals("HIGH")) {
+            view.setBackgroundColor(Color.RED);
+        }
+
         return view;
     }
 }

@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -73,6 +74,14 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("priority", todoItem.getPriority());
                 i.putExtra("dueDate", todoItem.getDueDate());
                 startActivityForResult(i, 20);
+            }
+        });
+
+        lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                view.setBackgroundColor(Color.GREEN);
+                return true;
             }
         });
     }

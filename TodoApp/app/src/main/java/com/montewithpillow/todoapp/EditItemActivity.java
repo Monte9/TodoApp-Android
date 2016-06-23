@@ -89,8 +89,6 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
 
         String priorityString = priorityToString(priorityValue);
 
-        System.out.println("is it add?" + add);
-
         Intent data = new Intent();
         if (add) {
             todoitem = new Todoitem(itemText, "HIGH", "Due @");
